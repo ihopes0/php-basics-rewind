@@ -1,5 +1,4 @@
 <?php
-require base_path('Validator.php');
 
 $config = require base_path('config.php');
 $db = new Database($config['database']);
