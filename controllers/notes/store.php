@@ -15,7 +15,7 @@ if (!Validator::string($_POST['body'], 1, 1000)) {
 if (!empty($errors)) {
 
     return view(
-        "views/notes/create.view.php",
+        "notes/create.view.php",
         [
             'heading' => 'Create Note',
             'errors' => $errors
