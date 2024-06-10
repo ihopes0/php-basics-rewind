@@ -32,12 +32,12 @@ class Database
         return $this;
     }
 
-    public function get() : array
+    public function get() : mixed
     {
         return $this->statement->fetchAll();
     }
 
-    public function find() : array
+    public function find() : mixed
     {
         return $this->statement->fetch();
     }
