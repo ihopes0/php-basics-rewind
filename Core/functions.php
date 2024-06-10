@@ -2,18 +2,20 @@
 
 use Core\Response;
 
-function urlIs($value) {
+function urlIs(string $value) : bool
+{
     return $_SERVER['REQUEST_URI'] === $value;
 }
 
-function dd($value){
+function dd(mixed $value) : void
+{
     echo "<pre>";
     var_dump($value);
     echo "</pre>";
     die();
 }
 
-function abort($code = 404)
+function abort(int $code = 404) : void
     {
         http_response_code($code);
 
@@ -22,19 +24,19 @@ function abort($code = 404)
         die();
     }
 
-function authorize(bool $condition, $status = Response::FORBIDDEN)
+function authorize(bool $condition, int $status = Response::FORBIDDEN) : void
 {
     if (!$condition) {
         abort($status);
     }
 }
 
-function base_path($path)
+function base_path(string $path) : string
 {
     return BASE_PATH . $path;
 }
 
-function view($path, $attributes)
+function view(string $path, array $attributes) : void
 {
     extract($attributes);
 

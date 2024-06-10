@@ -6,7 +6,7 @@ class Router
 {
     protected $routes = [];
 
-    private function add(string $uri, string $controller, string $method)
+    private function add(string $uri, string $controller, string $method) : void
     {
         $this->routes[] = [
             'uri' => $uri,
@@ -15,32 +15,32 @@ class Router
         ];
     }
 
-    public function get(string $uri, string $controller)
+    public function get(string $uri, string $controller) : void
     {
         $this->add($uri, $controller, 'GET');
     }
 
-    public function post(string $uri, string $controller)
+    public function post(string $uri, string $controller) : void
     {
         $this->add($uri, $controller, 'POST');
     }
 
-    public function delete(string $uri, string $controller)
+    public function delete(string $uri, string $controller) : void
     {
         $this->add($uri, $controller, 'DELETE');
     }
 
-    public function patch(string $uri, string $controller)
+    public function patch(string $uri, string $controller) : void
     {
         $this->add($uri, $controller, 'PATCH');
     }
 
-    public function put(string $uri, string $controller)
+    public function put(string $uri, string $controller) : void
     {
         $this->add($uri, $controller, 'PUT');
     }
 
-    public function route(string $uri, string $method)
+    public function route(string $uri, string $method) : string
     {
         foreach ($this->routes as $route) {
             if ($route['uri'] === $uri && $route['method'] === strtoupper($method)) {
@@ -51,7 +51,7 @@ class Router
         $this->abort();
     }
 
-    protected function abort($code = 404)
+    protected function abort(int $code = 404) : void
     {
         http_response_code($code);
 
