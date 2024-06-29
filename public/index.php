@@ -1,5 +1,6 @@
 <?php
 
+use Core\Router;
 use Core\Session;
 
 session_start();
@@ -8,7 +9,7 @@ const BASE_PATH = __DIR__ . '/../';
 
 require BASE_PATH . "Core/functions.php";
 
-spl_autoload_register(function ($class){
+spl_autoload_register(function ($class) {
     $class = str_replace('\\', DIRECTORY_SEPARATOR, $class);
 
     require base_path("{$class}.php");
@@ -16,12 +17,19 @@ spl_autoload_register(function ($class){
 
 require base_path('bootstrap.php');
 
-$router = new \Core\Router;
+$router = new Router;
 
 $routes =  require base_path('routes.php');
 
 $uri = parse_url($_SERVER["REQUEST_URI"])["path"];
 $method = $_POST['_method'] ?? $_SERVER['REQUEST_METHOD'];
 
-$router->route($uri, $method);
+try {
+    $router->route($uri, $method);
+} catch (\Core\ValidationException $e) {
+    Session::flash('errors', $e->errors);
+    Session::flash('old', $e->old);
+
+    redirect('/login');
+}
 Session::unflash();
