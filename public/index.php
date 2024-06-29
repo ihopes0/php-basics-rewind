@@ -30,6 +30,6 @@ try {
     Session::flash('errors', $e->errors);
     Session::flash('old', $e->old);
 
-    redirect('/login');
+    redirect($router->previousUrl());
 }
 Session::unflash();
