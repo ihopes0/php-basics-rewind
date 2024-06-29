@@ -1,6 +1,7 @@
 <?php
 
 namespace Http\Forms;
+
 use Core\Validator;
 
 class LoginForm
@@ -13,7 +14,7 @@ class LoginForm
             $this->errors['email'] = 'Please provide a valid email adress.';
         }
 
-        if (!Validator::string($attributes['password'], 100)) {
+        if (!Validator::string($attributes['password'])) {
             $this->errors['password'] = 'Please provide a valid password';
         }
     }
@@ -21,12 +22,13 @@ class LoginForm
     public static function validate($attributes)
     {
         $instance = new static($attributes);
-        
-        if ($instance->failed()) {
-            \Core\ValidationException::throw($instance->getErrors(), $instance->attributes);
-        }
 
-        return $instance;
+        return $instance->failed() ? $instance->throw() : $instance;
+    }
+
+    public function throw()
+    {
+        \Core\ValidationException::throw($this->getErrors(), $this->attributes);
     }
 
     public function failed()
@@ -42,5 +44,7 @@ class LoginForm
     public function error($type, $message)
     {
         $this->errors[$type] = $message;
+
+        return $this;
     }
 }

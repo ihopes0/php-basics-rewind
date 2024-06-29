@@ -11,10 +11,15 @@ $form = LoginForm::validate($attributes = [
     'password' => $_POST['password'],
 ]);
 
+$signedIn = (new Authenticator)->attempt(
+    $attributes['email'],
+    $attributes['password']
+);
 
-
-if ((new Authenticator)->attempt($attributes['email'], $attributes['password'])) {
-    redirect('/');
+if (!$signedIn) {
+    $form->error(
+        'bottom', 'No matching account for that email adress and password.'
+    )->throw();
 }
 
-$form->error('bottom', 'No matching account for that email adress and password.');
+redirect('/');
