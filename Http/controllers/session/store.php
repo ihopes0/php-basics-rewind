@@ -6,23 +6,21 @@ use Http\Forms\LoginForm;
 
 // log in the user if the creds match
 
-$email = $_POST['email'];
-$password = $_POST['password'];
+try {
+    $form = LoginForm::validate($attributes = [
+        'email' => $_POST['email'],
+        'password' => $_POST['password'],
+    ]);
+} catch (\Core\ValidationException $e) {
+    Session::flash('errors', $e->errors);
+    Session::flash('old', $e->old);
 
-$form = new LoginForm();
+    redirect('/login');
+}
 
-if ($form->validate($email, $password)) {
-    if ((new Authenticator)->attempt($email, $password)) {
-        redirect('/');
-    }
-};
+
+if ((new Authenticator)->attempt($attributes['email'], $attributes['password'])) {
+    redirect('/');
+}
 
 $form->error('bottom', 'No matching account for that email adress and password.');
-
-Session::flash('errors', $form->getErrors());
-Session::flash('old', [
-    'email' => $email,
-    'password' => $password,
-]);
-
-redirect('/login');

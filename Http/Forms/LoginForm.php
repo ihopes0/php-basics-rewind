@@ -7,18 +7,31 @@ class LoginForm
 {
     protected $errors = [];
 
-    public function validate(string $email, string $password)
+    public function __construct(public array $attributes)
     {
-        // validate input
-        if (!Validator::email($email)) {
+        if (!Validator::email($attributes['email'])) {
             $this->errors['email'] = 'Please provide a valid email adress.';
         }
 
-        if (!Validator::string($password, 1, INF)) {
+        if (!Validator::string($attributes['password'])) {
             $this->errors['password'] = 'Please provide a valid password';
         }
+    }
 
-        return empty($this->errors);
+    public static function validate($attributes)
+    {
+        $instance = new static($attributes);
+        
+        if ($instance->failed()) {
+            \Core\ValidationException::throw($instance->getErrors(), $instance->attributes);
+        }
+
+        return $instance;
+    }
+
+    public function failed()
+    {
+        return !empty($this->errors);
     }
 
     public function getErrors()
